@@ -98,24 +98,26 @@ async function displayQuestions( questionNumber = 0 ) {
         // console.log(questionsArr[questionNumber].answer);
         answer.addEventListener('click',()=>{
             if (answer.innerHTML === questionsArr[questionNumber].answer) {
-                console.log('ayyy');
+                // console.log('ayyy');
                 answer.style.backgroundColor = 'green';
                 correctAnswerCounter++;
                 localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}))
             }else{
-                console.log('nayy');
+                // console.log('nayy');
                 answer.style.backgroundColor = 'red';
                 wrongAnswerCounter++;
                 localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}));
             }
-           setTimeout(()=>{
-               displayQuestions(document.getElementById('question').innerHTML[0]);
+            let nextQuestionNumber =  document.getElementById('question').innerHTML[1] != '.' ? document.getElementById('question').innerHTML[0] + document.getElementById('question').innerHTML[1] : document.getElementById('question').innerHTML[0];
+           // console.log(nextQuestionNumber);
+            setTimeout(()=>{
+               displayQuestions(nextQuestionNumber);
 
-           },500)
+           },100)
         })
     }
         
-       //OVDJE SAM STAO
+     
     
 }
 
