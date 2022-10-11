@@ -40,11 +40,12 @@ async function getQuestions() {
         // console.log(url);
         let response = await fetch(url);
         let data = await response.json();
+        let counter = 1;
         for (const obj of data) {
 
             let { category,correctAnswer,incorrectAnswers,question } = obj;
-            let htmlQuestion = `<h1>${category}</h1><h3>${question}</h3>`
-         
+            let htmlQuestion = `<h1>${category}</h1><h3 id="question">${counter + '. ' + question}</h3>`;
+            counter++;
 
             let randomAnswerArr = [...incorrectAnswers,correctAnswer].sort((a,b)=>{
                 return a.localeCompare(b);
@@ -63,15 +64,44 @@ async function getQuestions() {
     return htmlQuestionArr
 }
 
-async function displayQuestions() {
-    let QuestionsArr = await getQuestions();
+async function displayQuestions( questionNumber = 0 ) {
+    let questionsArr
+    if (questionNumber == 0) {
+        questionsArr = await getQuestions();
+        localStorage.setItem('questionArr',JSON.stringify(questionsArr));
+    }else{
+        questionsArr = JSON.parse(localStorage.getItem('questionArr')); 
+    }
+    // console.log(questionsArr);
     let container = document.getElementById('container');
-    console.log(QuestionsArr);
-    QuestionsArr.forEach(e => {
-        container.innerHTML = e.HTMLQuestion
-        let answer = e.answer;
+    try{
+        container.innerHTML = questionsArr[questionNumber].HTMLQuestion ;
+    }catch{
+        container.innerHTML = `<h1>Thank you for playing</h1><a href='./index.html'>Play again</a>`;
+    }
+    let answerArr = document.querySelectorAll('.answer');
+    // console.log(QuestionsArr);
+    // console.log(answerArr);
+    for (const answer of answerArr) {
+        // console.log(answer.innerHTML);
+        // console.log(questionsArr[questionNumber].answer);
+        answer.addEventListener('click',()=>{
+            if (answer.innerHTML === questionsArr[questionNumber].answer) {
+                console.log('ayyy');
+                answer.style.backgroundColor = 'green';
+            }else{
+                console.log('nayy');
+                answer.style.backgroundColor = 'red';
+            }
+           setTimeout(()=>{
+               displayQuestions(document.getElementById('question').innerHTML[0]);
+
+           },1000)
+        })
+    }
+        
        //OVDJE SAM STAO
-    });
+    
 }
 
 
@@ -79,10 +109,10 @@ async function displayQuestions() {
 
 
 let startButton = document.getElementById('startButton');
-console.log(startButton);
+// console.log(startButton);
 
 startButton.addEventListener('click',()=>{
-
-        displayQuestions();
+        
+            displayQuestions();  
   
 })

@@ -31,3 +31,7 @@ input, select{
     padding: 5px;
     width: 150px;
 }
+
+.answer:hover{
+    cursor: pointer;
+}
