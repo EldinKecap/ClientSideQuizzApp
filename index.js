@@ -63,21 +63,32 @@ async function getQuestions() {
     // console.log(numberOfQuestions,category,difficulty);
     return htmlQuestionArr
 }
-
+// localStorage.clear()
 async function displayQuestions( questionNumber = 0 ) {
-    let questionsArr
+    let questionsArr;
+    let correctAnswerCounter ;
+    let wrongAnswerCounter ;
     if (questionNumber == 0) {
         questionsArr = await getQuestions();
         localStorage.setItem('questionArr',JSON.stringify(questionsArr));
+        correctAnswerCounter = 0;
+        wrongAnswerCounter = 0;
+        localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}))
     }else{
-        questionsArr = JSON.parse(localStorage.getItem('questionArr')); 
+        questionsArr = JSON.parse(localStorage.getItem('questionArr'));     
+        console.log(JSON.parse(localStorage.getItem('counters')));  
+        let counters = JSON.parse(localStorage.getItem('counters'));
+        correctAnswerCounter = counters.correctAnswerCounter;
+        wrongAnswerCounter = counters.wrongAnswerCounter;
     }
     // console.log(questionsArr);
     let container = document.getElementById('container');
     try{
         container.innerHTML = questionsArr[questionNumber].HTMLQuestion ;
     }catch{
-        container.innerHTML = `<h1>Thank you for playing</h1><a href='./index.html'>Play again</a>`;
+        container.innerHTML = `<h1>Thank you for playing</h1>
+        <h3>Correct Answers:${correctAnswerCounter} <br> Wrong Answers:${wrongAnswerCounter}</h3>
+        <a href='./index.html'>Play again</a>`;
     }
     let answerArr = document.querySelectorAll('.answer');
     // console.log(QuestionsArr);
@@ -89,14 +100,18 @@ async function displayQuestions( questionNumber = 0 ) {
             if (answer.innerHTML === questionsArr[questionNumber].answer) {
                 console.log('ayyy');
                 answer.style.backgroundColor = 'green';
+                correctAnswerCounter++;
+                localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}))
             }else{
                 console.log('nayy');
                 answer.style.backgroundColor = 'red';
+                wrongAnswerCounter++;
+                localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}));
             }
            setTimeout(()=>{
                displayQuestions(document.getElementById('question').innerHTML[0]);
 
-           },1000)
+           },500)
         })
     }
         

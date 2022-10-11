@@ -1,5 +1,6 @@
 h1{
     text-align: center;
+    margin: 5px 10px;
 }
 #container{
     text-align: center;
@@ -34,4 +35,8 @@ input, select{
 
 .answer:hover{
     cursor: pointer;
+}
+
+a{
+    margin-bottom: 10px;
 }
