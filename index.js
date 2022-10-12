@@ -86,7 +86,7 @@ async function displayQuestions( questionNumber = 0 ) {
     try{
         container.innerHTML = questionsArr[questionNumber].HTMLQuestion ;
     }catch{
-        container.innerHTML = `<h1>Thank you for playing</h1>
+        container.innerHTML = `<h1 id="thankYouMessage">Thank you for playing</h1>
         <h3>Correct Answers:${correctAnswerCounter} <br> Wrong Answers:${wrongAnswerCounter}</h3>
         <a href='./index.html'>Play again</a>`;
     }
@@ -108,7 +108,7 @@ async function displayQuestions( questionNumber = 0 ) {
                 for (const e of correctAnswer) {
                     if (e.innerHTML == questionsArr[questionNumber].answer) {
                         correctAnswer = e ;
-                        // console.log(correctAnswer);
+                        console.log(correctAnswer);
                         break;
                     }
                 }
@@ -126,39 +126,67 @@ async function displayQuestions( questionNumber = 0 ) {
     }    
     timer();
 }
-
-//Postoji mozda oversight jer nisam obratio dobro paznju
+// localStorage.clear();
+//
 function timer() {
     let timer = document.getElementById('timer');
-    let question = document.getElementById('question').innerHTML;
-    console.log(question);
-    let seconds = 30;
-    let myInterval = setInterval(()=>{
-        if (question != document.getElementById('question').innerHTML) {
-            console.log('sdada');
-            clearInterval(myInterval);
+    let question;
+    let seconds = 3;
+    try{
+         question = document.getElementById('question').innerHTML;
+         let myInterval = setInterval(()=>{
+             console.log(question);
+             timer.innerHTML=seconds;
+             seconds--;
+             
+             try {
+                 if (question != document.getElementById('question').innerHTML) {
+                     // console.log('sdada');
+                     // timer.innerHTML = '';
+                     clearInterval(myInterval);
+                    }
+                    //Ovdje gori nesto
+                    
+                    if(timer.innerHTML === '0'){
+                        let correctAnswer = document.querySelectorAll('.answer');
+                        let questionsArr = JSON.parse(localStorage.getItem('questionArr'));
+                        let questionNumber = document.getElementById('question').innerHTML[1] != '.' ? document.getElementById('question').innerHTML[0] + document.getElementById('question').innerHTML[1] : document.getElementById('question').innerHTML[0];
+                        // console.log(questionNumber);
+                        // console.log(questionsArr);
+                        for (const e of correctAnswer) {
+                            if (e.innerHTML == questionsArr[questionNumber-1].answer) {
+                                correctAnswer = e ;
+                                console.log(correctAnswer);
+                                break;
+                            }
+                        }
+                        correctAnswer.style.backgroundColor = 'green';
+                        let counters = JSON.parse(localStorage.getItem('counters'));
+                        let wrongAnswerCounter = counters.wrongAnswerCounter;
+                        wrongAnswerCounter++;
+                        localStorage.setItem('counters',JSON.stringify({correctAnswerCounter:counters.correctAnswerCounter,wrongAnswerCounter}));
+                        setTimeout(()=>{
+                            clearInterval(myInterval);
+                            if (questionNumber <= questionsArr.length) {
+                                displayQuestions(questionNumber);
+                                // throw new Error (err);
+                            }
+                            seconds = 0;
+                            
+                        },500);
+                    }
+                   
+                } catch {
+                       timer.innerHTML = '';  
+                    //    clearInterval(myInterval);
+                }
+               
+            },1000);
+        }catch{
+            // console.log(err+' JA JA');
+            timer.innerHTML = '';
         }
-        //Ovdje gori nesto
-        // if(timer.innerHTML == 0){
-        //     let correctAnswer = document.querySelectorAll('.answer');
-        //     let questionsArr = JSON.parse(localStorage.getItem('questionArr'));
-        //     let questionNumber = document.getElementById('question').innerHTML[1] != '.' ? document.getElementById('question').innerHTML[0] + document.getElementById('question').innerHTML[1] : document.getElementById('question').innerHTML[0];
-        //     for (const e of correctAnswer) {
-        //         if (e.innerHTML == questionsArr[questionNumber-1].answer) {
-        //             correctAnswer = e ;
-        //             // console.log(correctAnswer);
-        //             break;
-        //         }
-        //     }
-        //     correctAnswer.style.backgroundColor = 'green';
-        //     let counters = JSON.parse(localStorage.getItem('counters'));
-        //     let wrongAnswerCounter = counters.wrongAnswerCounter;
-        //     wrongAnswerCounter++;
-        //     localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}))
-        // }
-        timer.innerHTML=seconds
-        seconds--;
-    },1000);
+        
 }
 
 
