@@ -119,18 +119,47 @@ async function displayQuestions( questionNumber = 0 ) {
             }
             let nextQuestionNumber =  document.getElementById('question').innerHTML[1] != '.' ? document.getElementById('question').innerHTML[0] + document.getElementById('question').innerHTML[1] : document.getElementById('question').innerHTML[0];
            // console.log(nextQuestionNumber);
-            setTimeout(()=>{
+           setTimeout(()=>{
                displayQuestions(nextQuestionNumber);
-           },300)
+            },300)
         })
-    }
-        
-     
-    
+    }    
+    timer();
 }
 
-
-
+//Postoji mozda oversight jer nisam obratio dobro paznju
+function timer() {
+    let timer = document.getElementById('timer');
+    let question = document.getElementById('question').innerHTML;
+    console.log(question);
+    let seconds = 30;
+    let myInterval = setInterval(()=>{
+        if (question != document.getElementById('question').innerHTML) {
+            console.log('sdada');
+            clearInterval(myInterval);
+        }
+        //Ovdje gori nesto
+        // if(timer.innerHTML == 0){
+        //     let correctAnswer = document.querySelectorAll('.answer');
+        //     let questionsArr = JSON.parse(localStorage.getItem('questionArr'));
+        //     let questionNumber = document.getElementById('question').innerHTML[1] != '.' ? document.getElementById('question').innerHTML[0] + document.getElementById('question').innerHTML[1] : document.getElementById('question').innerHTML[0];
+        //     for (const e of correctAnswer) {
+        //         if (e.innerHTML == questionsArr[questionNumber-1].answer) {
+        //             correctAnswer = e ;
+        //             // console.log(correctAnswer);
+        //             break;
+        //         }
+        //     }
+        //     correctAnswer.style.backgroundColor = 'green';
+        //     let counters = JSON.parse(localStorage.getItem('counters'));
+        //     let wrongAnswerCounter = counters.wrongAnswerCounter;
+        //     wrongAnswerCounter++;
+        //     localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}))
+        // }
+        timer.innerHTML=seconds
+        seconds--;
+    },1000);
+}
 
 
 let startButton = document.getElementById('startButton');
