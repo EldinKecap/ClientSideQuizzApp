@@ -104,6 +104,15 @@ async function displayQuestions( questionNumber = 0 ) {
                 localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}))
             }else{
                 // console.log('nayy');
+                let correctAnswer = document.querySelectorAll('.answer')
+                for (const e of correctAnswer) {
+                    if (e.innerHTML == questionsArr[questionNumber].answer) {
+                        correctAnswer = e ;
+                        // console.log(correctAnswer);
+                        break;
+                    }
+                }
+                correctAnswer.style.backgroundColor = 'green';
                 answer.style.backgroundColor = 'red';
                 wrongAnswerCounter++;
                 localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}));
@@ -112,8 +121,7 @@ async function displayQuestions( questionNumber = 0 ) {
            // console.log(nextQuestionNumber);
             setTimeout(()=>{
                displayQuestions(nextQuestionNumber);
-
-           },100)
+           },300)
         })
     }
         
