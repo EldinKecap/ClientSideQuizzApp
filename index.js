@@ -68,6 +68,15 @@ async function displayQuestions( questionNumber = 0 ) {
     let questionsArr;
     let correctAnswerCounter ;
     let wrongAnswerCounter ;
+    try{
+        let numberOfQuestions = document.getElementById('numberOfQuestions').value||5;
+        if (numberOfQuestions > 20 || numberOfQuestions <= 0) {
+            let errorLabel = document.querySelector(`label[for='numberOfQuestions']`);
+            errorLabel.innerHTML += 'Number is not between 0 and 20' ;
+            return;}
+        }catch{
+            console.log('numOfQuestions ok');
+        }
     if (questionNumber == 0) {
         questionsArr = await getQuestions();
         localStorage.setItem('questionArr',JSON.stringify(questionsArr));
@@ -99,12 +108,13 @@ async function displayQuestions( questionNumber = 0 ) {
         answer.addEventListener('click',()=>{
             if (answer.innerHTML === questionsArr[questionNumber].answer) {
                 // console.log('ayyy');
-                answer.style.backgroundColor = 'green';
+                answer.style.backgroundColor = 'lightgreen';
                 correctAnswerCounter++;
                 localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}))
             }else{
                 // console.log('nayy');
                 let correctAnswer = document.querySelectorAll('.answer')
+                console.log(correctAnswer);
                 for (const e of correctAnswer) {
                     if (e.innerHTML == questionsArr[questionNumber].answer) {
                         correctAnswer = e ;
@@ -112,8 +122,8 @@ async function displayQuestions( questionNumber = 0 ) {
                         break;
                     }
                 }
-                correctAnswer.style.backgroundColor = 'green';
-                answer.style.backgroundColor = 'red';
+                correctAnswer.style.backgroundColor = 'lightgreen';
+                answer.style.backgroundColor = 'rgb(255, 170, 170)';
                 wrongAnswerCounter++;
                 localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}));
             }
@@ -131,12 +141,14 @@ async function displayQuestions( questionNumber = 0 ) {
 function timer() {
     let timer = document.getElementById('timer');
     let question;
-    let seconds = 3;
+    let seconds = 15;
     try{
          question = document.getElementById('question').innerHTML;
          let myInterval = setInterval(()=>{
              console.log(question);
-             timer.innerHTML=seconds;
+             timer.innerHTML = seconds;
+             timer.className = 'showTimer'
+
              seconds--;
              
              try {
@@ -145,9 +157,9 @@ function timer() {
                      // timer.innerHTML = '';
                      clearInterval(myInterval);
                     }
-                    //Ovdje gori nesto
                     
-                    if(timer.innerHTML === '0'){
+                    
+                    if(Number(timer.innerHTML) <= 0){
                         let correctAnswer = document.querySelectorAll('.answer');
                         let questionsArr = JSON.parse(localStorage.getItem('questionArr'));
                         let questionNumber = document.getElementById('question').innerHTML[1] != '.' ? document.getElementById('question').innerHTML[0] + document.getElementById('question').innerHTML[1] : document.getElementById('question').innerHTML[0];
@@ -160,7 +172,7 @@ function timer() {
                                 break;
                             }
                         }
-                        correctAnswer.style.backgroundColor = 'green';
+                        correctAnswer.style.backgroundColor = 'lightgreen';
                         let counters = JSON.parse(localStorage.getItem('counters'));
                         let wrongAnswerCounter = counters.wrongAnswerCounter;
                         wrongAnswerCounter++;
@@ -178,13 +190,14 @@ function timer() {
                    
                 } catch {
                        timer.innerHTML = '';  
-                    //    clearInterval(myInterval);
+                       clearInterval(myInterval);
                 }
                
             },1000);
         }catch{
             // console.log(err+' JA JA');
-            timer.innerHTML = '';
+            // timer.innerHTML = '';
+
         }
         
 }
@@ -195,6 +208,22 @@ let startButton = document.getElementById('startButton');
 
 startButton.addEventListener('click',()=>{
         
-            displayQuestions();  
-  
+    displayQuestions();  
+    let time = 0;
+    let wholeQuizTimer = setInterval(()=>{
+        time++;
+        try{
+            let thankYouMessage = document.getElementById('thankYouMessage');
+            let timer = document.getElementById('timer');
+            console.log(time);
+            if (thankYouMessage.innerHTML == "Thank you for playing") {
+                timer.innerHTML = 'Total time : ' + time + 'seconds';
+                
+                clearInterval(wholeQuizTimer);   
+            }
+        }catch{
+
+                }
+
+            },1000)
 })
