@@ -75,7 +75,7 @@ async function displayQuestions( questionNumber = 0 ) {
             errorLabel.innerHTML += 'Number is not between 0 and 20' ;
             return;}
         }catch{
-            console.log('numOfQuestions ok');
+            // console.log('numOfQuestions ok');
         }
     if (questionNumber == 0) {
         questionsArr = await getQuestions();
@@ -85,7 +85,7 @@ async function displayQuestions( questionNumber = 0 ) {
         localStorage.setItem('counters',JSON.stringify({correctAnswerCounter,wrongAnswerCounter}))
     }else{
         questionsArr = JSON.parse(localStorage.getItem('questionArr'));     
-        console.log(JSON.parse(localStorage.getItem('counters')));  
+        // console.log(JSON.parse(localStorage.getItem('counters')));  
         let counters = JSON.parse(localStorage.getItem('counters'));
         correctAnswerCounter = counters.correctAnswerCounter;
         wrongAnswerCounter = counters.wrongAnswerCounter;
@@ -118,7 +118,7 @@ async function displayQuestions( questionNumber = 0 ) {
                 for (const e of correctAnswer) {
                     if (e.innerHTML == questionsArr[questionNumber].answer) {
                         correctAnswer = e ;
-                        console.log(correctAnswer);
+                        // console.log(correctAnswer);
                         break;
                     }
                 }
@@ -145,7 +145,7 @@ function timer() {
     try{
          question = document.getElementById('question').innerHTML;
          let myInterval = setInterval(()=>{
-             console.log(question);
+            //  console.log(question);
              timer.innerHTML = seconds;
              timer.className = 'showTimer'
 
@@ -168,7 +168,7 @@ function timer() {
                         for (const e of correctAnswer) {
                             if (e.innerHTML == questionsArr[questionNumber-1].answer) {
                                 correctAnswer = e ;
-                                console.log(correctAnswer);
+                                // console.log(correctAnswer);
                                 break;
                             }
                         }
@@ -189,7 +189,10 @@ function timer() {
                     }
                    
                 } catch {
-                       timer.innerHTML = '';  
+                        if (!timer.innerHTML.includes('Total time')) {
+                            timer.innerHTML = '';  
+                            console.log('brise timer');
+                        }
                        clearInterval(myInterval);
                 }
                

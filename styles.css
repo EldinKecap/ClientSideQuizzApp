@@ -94,3 +94,7 @@ h3{
 #startButton:hover{
     background-color: darkgray;
 }
+
+#timer{
+    height: 25px;
+}
